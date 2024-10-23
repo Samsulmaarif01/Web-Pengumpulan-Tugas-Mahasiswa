@@ -1,371 +1,355 @@
 <!DOCTYPE html>
 <html lang="id">
-  <head>
+<head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Portofolio Mahasiswa</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.0/papaparse.min.js"></script>
     <style>
-      * {
-        margin: 0;
-        padding: 0;
-        box-sizing: border-box;
-        font-family: "Segoe UI", system-ui, -apple-system, sans-serif;
-      }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "Segoe UI", system-ui, -apple-system, sans-serif;
+        }
 
-      body {
-        background: var(--bg-color);
-        color: var(--text-color);
-        line-height: 1.6;
-        transition: background 0.3s ease, color 0.3s ease;
-      }
+        body {
+            background: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            transition: background 0.3s ease, color 0.3s ease;
+        }
 
-      :root {
-        --bg-color: #f8f9fa;
-        --text-color: #333;
-        --card-bg-color: white;
-        --card-border-color: rgba(99, 102, 241, 0.1);
-        --link-bg-color: #4f46e5;
-        --link-hover-bg-color: #4338ca;
-        --icon-color: #6366f1;
-        --shadow-color: rgba(0, 0, 0, 0.1);
-      }
+        :root {
+            --bg-color: #dde2e7;
+            --text-color: #333;
+            --card-bg-color: white;
+            --card-border-color: rgba(99, 102, 241, 0.1);
+            --link-bg-color: #4f46e5;
+            --link-hover-bg-color: #4338ca;
+            --icon-color: #6366f1;
+            --shadow-color: rgba(0, 0, 0, 0.1);
+        }
 
-      body.dark-mode {
-        --bg-color: #1f2937;
-        --text-color: #e5e7eb;
-        --card-bg-color: #374151;
-        --card-border-color: #4b5563;
-        --link-bg-color: #6366f1;
-        --link-hover-bg-color: #818cf8;
-        --icon-color: #cbd5e1;
-        --shadow-color: rgba(255, 255, 255, 0.1);
-      }
+        body.dark-mode {
+            --bg-color: #1f2937;
+            --text-color: #e5e7eb;
+            --card-bg-color: #374151;
+            --card-border-color: #4b5563;
+            --link-bg-color: #6366f1;
+            --link-hover-bg-color: #818cf8;
+            --icon-color: #cbd5e1;
+            --shadow-color: rgba(255, 255, 255, 0.1);
+        }
 
-      .container {
-        max-width: 1200px;
-        margin: 0 auto;
-        padding: 2rem;
-      }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
 
-      .header {
-        text-align: center;
-        padding: 3rem 1rem;
-        background: linear-gradient(135deg, #6366f1, #4f46e5);
-        color: white;
-        border-radius: 20px;
-        margin-bottom: 2rem;
-        box-shadow: 0 4px 6px -1px var(--shadow-color);
-      }
+        .header {
+            text-align: center;
+            padding: 3rem 1rem;
+            background: linear-gradient(135deg, #6366f1, #4f46e5);
+            color: white;
+            border-radius: 20px;
+            margin-bottom: 2rem;
+            box-shadow: 0 4px 6px -1px var(--shadow-color);
+        }
 
-      /* Tombol dark mode yang lebih simpel */
-      .dark-mode-toggle {
-        position: fixed;
-        top: 20px;
-        right: 20px;
-        background: var(--link-bg-color);
-        color: white;
-        border: none;
-        width: 40px;
-        height: 40px;
-        border-radius: 10px;
-        cursor: pointer;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 1.2rem;
-        transition: 0.3s ease;
-      }
+        .dark-mode-toggle {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: var(--link-bg-color);
+            color: white;
+            border: none;
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            transition: 0.3s ease;
+        }
 
-      .dark-mode-toggle:hover {
-        opacity: 0.9;
-        transform: scale(1.05);
-      }
+        .dark-mode-toggle:hover {
+            opacity: 0.9;
+            transform: scale(1.05);
+        }
 
-      /* Icon user yang lebih simpel */
-      .user-icon {
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        width: 32px;
-        height: 32px;
-        background: var(--link-bg-color);
-        border-radius: 8px;
-        margin-right: 10px;
-      }
+        .stats-container {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1.5rem;
+            margin: 2rem 0;
+        }
 
-      .user-icon svg {
-        width: 20px;
-        height: 20px;
-        fill: white;
-      }
+        .stat-card {
+            background: var(--card-bg-color);
+            padding: 2rem;
+            border-radius: 16px;
+            box-shadow: 0 4px 6px -1px var(--shadow-color);
+            border: 1px solid var(--card-border-color);
+            transition: transform 0.3s ease;
+        }
 
-      /* Sisanya tetap sama */
-      .stats-container {
-        display: grid;
-        grid-template-columns: repeat(2, 1fr);
-        gap: 1.5rem;
-        margin: 2rem 0;
-      }
+        .stat-card:hover {
+            transform: translateY(-5px);
+        }
 
-      .stat-card {
-        background: var(--card-bg-color);
-        padding: 2rem;
-        border-radius: 16px;
-        box-shadow: 0 4px 6px -1px var(--shadow-color);
-        border: 1px solid var(--card-border-color);
-        transition: transform 0.3s ease;
-      }
+        .stat-number {
+            font-size: 3rem;
+            font-weight: 700;
+            color: var(--link-bg-color);
+            margin-bottom: 0.5rem;
+            line-height: 1;
+        }
 
-      .stat-card:hover {
-        transform: translateY(-5px);
-      }
+        .stat-label {
+            color: #6b7280;
+            font-size: 1.1rem;
+            font-weight: 500;
+        }
 
-      .stat-number {
-        font-size: 3rem;
-        font-weight: 700;
-        color: var(--link-bg-color);
-        margin-bottom: 0.5rem;
-        line-height: 1;
-      }
+        .search-container {
+            margin: 2rem 0;
+        }
 
-      .stat-label {
-        color: #6b7280;
-        font-size: 1.1rem;
-        font-weight: 500;
-      }
+        .search-input {
+            width: 100%;
+            padding: 1rem 1.5rem;
+            font-size: 1.1rem;
+            border: 2px solid var(--card-border-color);
+            border-radius: 12px;
+            background: var(--card-bg-color);
+            color: var(--text-color);
+            transition: border-color 0.3s ease;
+        }
 
-      .search-container {
-        margin: 2rem 0;
-      }
+        .portfolio-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1.5rem;
+        }
 
-      .search-input {
-        width: 100%;
-        padding: 1rem 1.5rem;
-        font-size: 1.1rem;
-        border: 2px solid var(--card-border-color);
-        border-radius: 12px;
-        background: var(--card-bg-color);
-        color: var(--text-color);
-        transition: border-color 0.3s ease;
-      }
+        .portfolio-card {
+            background: var(--card-bg-color);
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 4px 6px -1px var(--shadow-color);
+            border: 1px solid var(--card-border-color);
+            transition: transform 0.3s ease;
+        }
 
-      .portfolio-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-        gap: 1.5rem;
-      }
+        .portfolio-card:hover {
+            transform: translateY(-5px);
+        }
 
-      .portfolio-card {
-        background: var(--card-bg-color);
-        border-radius: 16px;
-        overflow: hidden;
-        box-shadow: 0 4px 6px -1px var(--shadow-color);
-        border: 1px solid var(--card-border-color);
-        transition: transform 0.3s ease;
-      }
+        .portfolio-content {
+            padding: 1.5rem;
+        }
 
-      .portfolio-card:hover {
-        transform: translateY(-5px);
-      }
+        .portfolio-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--text-color);
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+        }
 
-      .portfolio-content {
-        padding: 1.5rem;
-      }
+        .portfolio-details {
+            color: #6b7280;
+            margin: 1rem 0;
+        }
 
-      .portfolio-title {
-        font-size: 1.2rem;
-        font-weight: 600;
-        color: var(--text-color);
-        margin-bottom: 0.5rem;
-        display: flex;
-        align-items: center;
-      }
+        .portfolio-link {
+            display: inline-block;
+            width: 100%;
+            padding: 0.8rem 1.2rem;
+            background: var(--link-bg-color);
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: 500;
+            text-align: center;
+            transition: background 0.3s ease;
+        }
 
-      .portfolio-details {
-        color: #6b7280;
-        margin: 1rem 0;
-      }
+        .portfolio-link:hover {
+            background: var(--link-hover-bg-color);
+        }
 
-      .portfolio-link {
-        display: inline-block;
-        width: 100%;
-        padding: 0.8rem 1.2rem;
-        background: var(--link-bg-color);
-        color: white;
-        text-decoration: none;
-        border-radius: 8px;
-        font-weight: 500;
-        text-align: center;
-        transition: background 0.3s ease;
-      }
-
-      .portfolio-link:hover {
-        background: var(--link-hover-bg-color);
-      }
-
+        .error-message {
+            text-align: center;
+            padding: 2rem;
+            color: #ef4444;
+            background: var(--card-bg-color);
+            border-radius: 16px;
+            margin: 2rem 0;
+        }
     </style>
-  </head>
-  <body>
+</head>
+<body>
     <div class="container">
-      <button class="dark-mode-toggle" id="darkModeToggle">
-        🌓
-      </button>
+        <button class="dark-mode-toggle" id="darkModeToggle">🌓</button>
+        <header class="header">
+            <h1>Portofolio Mahasiswa</h1>
+            <p>Showcase Karya Terbaik Mahasiswa Kelas 05TPLP007</p>
+        </header>
 
-      <header class="header">
-        <h1>Portofolio Mahasiswa</h1>
-        <p>Showcase Karya Terbaik Mahasiswa Kelas 05TPLP007</p>
-      </header>
+        <section class="stats-container">
+            <div class="stat-card">
+                <div class="stat-number" id="totalSubmissions">0</div>
+                <div class="stat-label">Jumlah Mahasiswa yang mengumpulkan</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="completionRate">0%</div>
+                <div class="stat-label">Tingkat Penyelesaian dari total 33 mahasiswa</div>
+            </div>
+        </section>
 
-      <section class="stats-container">
-        <div class="stat-card">
-          <div class="stat-number" id="totalSubmissions">0</div>
-          <div class="stat-label">Jumlah Mahasiswa yang mengumpulkan</div>
+        <div class="search-container">
+            <input type="text" id="searchInput" class="search-input" placeholder="Cari mahasiswa berdasarkan Nama atau NIM..." />
         </div>
-        <div class="stat-card">
-          <div class="stat-number" id="completionRate">0%</div>
-          <div class="stat-label">Tingkat Penyelesaian dari total 33 mahasiswa</div>
-        </div>
-      </section>
 
-      <div class="search-container">
-        <input
-          type="text"
-          id="searchInput"
-          class="search-input"
-          placeholder="Cari mahasiswa berdasarkan Nama atau NIM..."
-        />
-      </div>
-
-      <section id="portfolioContainer" class="portfolio-grid"></section>
-      <div class="last-update" id="lastUpdate">Pembaruan terakhir: -</div>
+        <section id="portfolioContainer" class="portfolio-grid"></section>
     </div>
 
     <script>
-      const CSV_URL =
-        "https://docs.google.com/spreadsheets/d/e/2PACX-1vSYsQ7zDzMXVCamImCYcEkIVXhD15NuWc1QMpJUc919xT28ZupaPYlAxsXZpbX1f5OEzh6EM48v4SYc/pub?output=csv";
-
-      document.addEventListener("DOMContentLoaded", () => {
-        fetchData();
-        setupDarkMode();
-      });
-
-      function createCard(data) {
-        const description = data.Deskripsi
-          ? `<div class="portfolio-description">${escapeHtml(data.Deskripsi)}</div>`
-          : "";
-
-        return `
-          <div class="portfolio-card">
-            <div class="portfolio-content">
-              <h3 class="portfolio-title">
-                <span class="user-icon">
-                  <svg viewBox="0 0 24 24">
-                    <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 3c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3zm0 14.2c-2.5 0-4.71-1.28-6-3.22.03-1.99 4-3.08 6-3.08 1.99 0 5.97 1.09 6 3.08-1.29 1.94-3.5 3.22-6 3.22z" fill="currentColor"/>
-                  </svg>
-                </span>
-                ${escapeHtml(data.Nama)}
-              </h3>
-              <div class="portfolio-details">
-                <p><strong>NIM:</strong> ${escapeHtml(data.Nim)}</p>
-                ${description}
-              </div>
-              <a href="http://${escapeHtml(data.Link)}" class="portfolio-link" target="_blank">
-                Lihat Portofolio
-              </a>
-            </div>
-          </div>
-        `;
-      }
-
-      function setupDarkMode() {
-        const darkModeToggle = document.getElementById("darkModeToggle");
         
-        // Check saved preference
-        if (localStorage.getItem("darkMode") === "true") {
-          document.body.classList.add("dark-mode");
+        const CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSYsQ7zDzMXVCamImCYcEkIVXhD15NuWc1QMpJUc919xT28ZupaPYlAxsXZpbX1f5OEzh6EM48v4SYc/pub?output=csv";
+        
+        document.addEventListener("DOMContentLoaded", () => {
+            fetchData();
+            setupDarkMode();
+            setupSearch();
+        });
+
+        function createCard(data) {
+            const description = data.deskripsi ? `<div class="portfolio-description">${escapeHtml(data.deskripsi)}</div>` : "";
+
+            return `
+                <div class="portfolio-card">
+                    <div class="portfolio-content">
+                        <h3 class="portfolio-title">
+                            <span class="user-icon">
+                                <svg viewBox="0 0 24 24" width="24" height="24" fill="currentColor">
+                                    <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 3c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3zm0 14.2c-2.5 0-4.71-1.28-6-3.22.03-1.06 2.09-2.52 6-2.52 3.9 0 5.97 1.42 6 2.52-1.29 1.94-3.5 3.22-6 3.22z"/>
+                                </svg>
+                            </span>
+                            ${escapeHtml(data.nama)}
+                        </h3>
+                        <p class="portfolio-details">NIM: ${escapeHtml(data.nim)}</p>
+                        ${description}
+                    </div>
+                    <a href="${escapeHtml(data.link)}" class="portfolio-link" target="_blank">Lihat Portofolio</a>
+                </div>
+            `;
         }
 
-        darkModeToggle.addEventListener("click", () => {
-          document.body.classList.toggle("dark-mode");
-          localStorage.setItem("darkMode", document.body.classList.contains("dark-mode"));
-        });
-      }
+        function displayPortfolio(data) {
+            const portfolioContainer = document.getElementById("portfolioContainer");
+            
+            if (!data || data.length === 0) {
+                portfolioContainer.innerHTML = `
+                    <div class="error-message">
+                        <h3>Tidak ada data untuk ditampilkan</h3>
+                        <p>Pastikan Google Sheets sudah dipublish ke web dan URL CSV sudah benar.</p>
+                    </div>`;
+                return;
+            }
 
-      function fetchData() {
-        Papa.parse(CSV_URL, {
-          download: true,
-          header: true,
-          complete: function (results) {
-            const data = results.data;
-            displayPortfolio(data);
-            updateStats(data);
-            document.getElementById("lastUpdate").textContent =
-              "Pembaruan terakhir: " + new Date().toLocaleString();
-          },
-          error: function () {
-            document.getElementById("portfolioContainer").innerHTML =
-              '<div class="error">Gagal memuat data. Silakan coba lagi nanti.</div>';
-          },
-        });
-      }
+            portfolioContainer.innerHTML = "";
+            data.forEach((item) => {
+                if (item.nama && item.nim && item.link) {
+                    const cardHTML = createCard(item);
+                    portfolioContainer.innerHTML += cardHTML;
+                }
+            });
 
-      function displayPortfolio(data) {
-        const portfolioContainer = document.getElementById("portfolioContainer");
-        portfolioContainer.innerHTML = "";
-
-        if (data.length === 0) {
-          portfolioContainer.innerHTML =
-            '<div class="empty-state">Tidak ada data yang tersedia.</div>';
-          return;
+            updateStats(data.length);
         }
 
-        data.forEach((student) => {
-          if (student.Nama && student.Nim && student.Link) {
-            const cardHTML = createCard(student);
-            portfolioContainer.innerHTML += cardHTML;
-          }
-        });
-      }
+        function updateStats(total) {
+            document.getElementById("totalSubmissions").textContent = total;
+            const completionRate = Math.round((total / 33) * 100);
+            document.getElementById("completionRate").textContent = `${completionRate}%`;
+        }
 
-      document.getElementById("searchInput").addEventListener("input", function () {
-        const query = this.value.toLowerCase();
-        const portfolioCards = document.querySelectorAll(".portfolio-card");
+        function escapeHtml(unsafe) {
+            if (!unsafe) return '';
+            return unsafe
+                .toString()
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;")
+                .replace(/"/g, "&quot;")
+                .replace(/'/g, "&#039;");
+        }
 
-        portfolioCards.forEach((card) => {
-          const title = card.querySelector(".portfolio-title").textContent.toLowerCase();
-          const nim = card.querySelector(".portfolio-details p").textContent.toLowerCase();
-          if (title.includes(query) || nim.includes(query)) {
-            card.style.display = "block";
-          } else {
-            card.style.display = "none";
-          }
-        });
-      });
+        function fetchData() {
+            Papa.parse(CSV_URL, {
+                download: true,
+                header: true,
+                transformHeader: function(header) {
+                    // Mengubah header menjadi lowercase untuk konsistensi
+                    return header.toLowerCase().trim();
+                },
+                complete: function (results) {
+                    console.log("Data mentah:", results.data); // Debugging
+                    const validData = results.data.filter(item => item.nama && item.nim && item.link);
+                    console.log("Data valid:", validData); // Debugging
+                    displayPortfolio(validData);
+                },
+                error: function (error) {
+                    console.error("Error mengambil data CSV:", error);
+                    document.getElementById("portfolioContainer").innerHTML = `
+                        <div class="error-message">
+                            <h3>Error mengambil data</h3>
+                            <p>Terjadi kesalahan saat mengambil data. Silakan coba lagi nanti.</p>
+                            <p>Detail error: ${error.message}</p>
+                        </div>`;
+                }
+            });
+        }
 
-      function escapeHtml(text) {
-        const map = {
-          "&": "&amp;",
-          "<": "&lt;",
-          ">": "&gt;",
-          '"': "&quot;",
-          "'": "&#039;",
-        };
-        return text.replace(/[&<>"']/g, function (m) {
-          return map[m];
-        });
-      }
+        function setupDarkMode() {
+            const darkModeToggle = document.getElementById("darkModeToggle");
+            const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+            
+            if (prefersDark) {
+                document.body.classList.add("dark-mode");
+                darkModeToggle.textContent = "🌞";
+            }
 
-      function updateStats(data) {
-        const totalSubmissions = data.filter(
-          (student) => student.Nama && student.Nim && student.Link
-        ).length;
-        document.getElementById("totalSubmissions").textContent = totalSubmissions;
+            darkModeToggle.addEventListener("click", () => {
+                document.body.classList.toggle("dark-mode");
+                darkModeToggle.textContent = document.body.classList.contains("dark-mode") ? "🌞" : "🌜";
+            });
+        }
 
-        const totalStudents = 33;
-        const completionRate = Math.round((totalSubmissions / totalStudents) * 100);
-        document.getElementById("completionRate").textContent = `${completionRate}%`;
-      }
+        function setupSearch() {
+            const searchInput = document.getElementById("searchInput");
+            searchInput.addEventListener("input", (e) => {
+                const searchTerm = e.target.value.toLowerCase();
+                const portfolioCards = document.querySelectorAll(".portfolio-card");
+                
+                portfolioCards.forEach((card) => {
+                    const title = card.querySelector(".portfolio-title").textContent.toLowerCase();
+                    const nim = card.querySelector(".portfolio-details").textContent.toLowerCase();
+                    if (title.includes(searchTerm) || nim.includes(searchTerm)) {
+                        card.style.display = "block";
+                    } else {
+                        card.style.display = "none";
+                    }
+                });
+            });
+        }
     </script>
-  </body>
+</body>
 </html>
