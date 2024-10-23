@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Portofolio Mahasiswa</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.0/papaparse.min.js"></script>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <div class="container">
+        <button class="dark-mode-toggle" id="darkModeToggle">🌓</button>
+        <header class="header">
+            <h1>Portofolio Mahasiswa</h1>
+            <p>Showcase Karya Terbaik Mahasiswa Kelas 05TPLP007</p>
+        </header>
+
+        <section class="stats-container">
+            <div class="stat-card">
+                <div class="stat-number" id="totalSubmissions">0</div>
+                <div class="stat-label">Jumlah Mahasiswa yang mengumpulkan</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="completionRate">0%</div>
+                <div class="stat-label">Tingkat Penyelesaian dari total 33 mahasiswa</div>
+            </div>
+        </section>
+
+        <div class="search-container">
+            <input type="text" id="searchInput" class="search-input" placeholder="Cari mahasiswa berdasarkan Nama atau NIM..." />
+        </div>
+
+        <section id="portfolioContainer" class="portfolio-grid"></section>
+    </div>
+    
+    <script src="js/script.js"></script>
+</body>
+</html>
