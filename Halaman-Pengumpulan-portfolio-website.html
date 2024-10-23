@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Portofolio Mahasiswa</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.0/papaparse.min.js"></script>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: "Segoe UI", system-ui, -apple-system, sans-serif;
+      }
+
+      body {
+        background: var(--bg-color);
+        color: var(--text-color);
+        line-height: 1.6;
+        transition: background 0.3s ease, color 0.3s ease;
+      }
+
+      :root {
+        --bg-color: #f8f9fa;
+        --text-color: #333;
+        --card-bg-color: white;
+        --card-border-color: rgba(99, 102, 241, 0.1);
+        --link-bg-color: #4f46e5;
+        --link-hover-bg-color: #4338ca;
+        --icon-color: #6366f1;
+        --shadow-color: rgba(0, 0, 0, 0.1);
+        --gradient-start: #6366f1;
+        --gradient-end: #4f46e5;
+      }
+
+      body.dark-mode {
+        --bg-color: #111827;
+        --text-color: #e5e7eb;
+        --card-bg-color: #1f2937;
+        --card-border-color: #374151;
+        --link-bg-color: #6366f1;
+        --link-hover-bg-color: #818cf8;
+        --icon-color: #cbd5e1;
+        --shadow-color: rgba(0, 0, 0, 0.3);
+        --gradient-start: #4f46e5;
+        --gradient-end: #2563eb;
+      }
+
+      .container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 2rem;
+      }
+
+      .header {
+        text-align: center;
+        padding: 3rem 1rem;
+        background: linear-gradient(135deg, var(--gradient-start), var(--gradient-end));
+        color: white;
+        border-radius: 20px;
+        margin-bottom: 2rem;
+        box-shadow: 0 8px 16px -4px var(--shadow-color);
+      }
+
+      .dark-mode-toggle {
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        background: linear-gradient(135deg, var(--gradient-start), var(--gradient-end));
+        color: white;
+        border: none;
+        width: 45px;
+        height: 45px;
+        border-radius: 12px;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.3rem;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 8px -2px var(--shadow-color);
+      }
+
+      .dark-mode-toggle:hover {
+        transform: translateY(-2px) scale(1.05);
+        box-shadow: 0 6px 12px -2px var(--shadow-color);
+      }
+
+      .user-icon {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 40px;
+        height: 40px;
+        background: linear-gradient(135deg, var(--gradient-start), var(--gradient-end));
+        border-radius: 12px;
+        margin-right: 12px;
+        box-shadow: 0 4px 8px -2px var(--shadow-color);
+      }
+
+      .user-icon svg {
+        width: 24px;
+        height: 24px;
+        fill: white;
+      }
+
+      .portfolio-card {
+        background: var(--card-bg-color);
+        border-radius: 16px;
+        overflow: hidden;
+        box-shadow: 0 4px 12px -2px var(--shadow-color);
+        border: 1px solid var(--card-border-color);
+        transition: all 0.3s ease;
+      }
+
+      .portfolio-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 16px -4px var(--shadow-color);
+      }
+
+      .portfolio-link {
+        display: inline-block;
+        width: 100%;
+        padding: 1rem 1.5rem;
+        background: linear-gradient(135deg, var(--gradient-start), var(--gradient-end));
+        color: white;
+        text-decoration: none;
+        border-radius: 12px;
+        font-weight: 500;
+        text-align: center;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 8px -2px var(--shadow-color);
+        position: relative;
+        overflow: hidden;
+      }
+
+      .portfolio-link:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 12px -2px var(--shadow-color);
+      }
+
+      .portfolio-link::after {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(135deg, transparent, rgba(255, 255, 255, 0.1));
+        transition: 0.3s ease;
+      }
+
+      .portfolio-link:hover::after {
+        opacity: 0.8;
+      }
+
+      /* Sisanya tetap sama seperti sebelumnya */
+      .stats-container {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 1.5rem;
+        margin: 2rem 0;
+      }
+
+      .stat-card {
+        background: var(--card-bg-color);
+        padding: 2rem;
+        border-radius: 16px;
+        box-shadow: 0 4px 12px -2px var(--shadow-color);
+        border: 1px solid var(--card-border-color);
+        transition: transform 0.3s ease;
+      }
+
+      .search-container {
+        margin: 2rem 0;
+      }
+
+      .search-input {
+        width: 100%;
+        padding: 1rem 1.5rem;
+        font-size: 1.1rem;
+        border: 2px solid var(--card-border-color);
+        border-radius: 12px;
+        background: var(--card-bg-color);
+        color: var(--text-color);
+        transition: all 0.3s ease;
+      }
+
+      .search-input:focus {
+        outline: none;
+        border-color: var(--gradient-start);
+        box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+      }
+
+      .portfolio-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+        gap: 1.5rem;
+      }
+
+      .portfolio-content {
+        padding: 1.5rem;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Body content tetap sama seperti sebelumnya -->
+    <div class="container">
+      <button class="dark-mode-toggle" id="darkModeToggle">
+        🌓
+      </button>
+
+      <header class="header">
+        <h1>Portofolio Mahasiswa</h1>
+        <p>Lihat portofolio mahasiswa berikut ini</p>
+      </header>
+
+      <section class="stats-container">
+        <div class="stat-card">
+          <div class="stat-number" id="totalSubmissions">0</div>
+          <div class="stat-label">Jumlah Pengiriman</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-number" id="completionRate">0%</div>
+          <div class="stat-label">Persentase Penyelesaian</div>
+        </div>
+      </section>
+
+      <div class="search-container">
+        <input
+          type="text"
+          id="searchInput"
+          class="search-input"
+          placeholder="Cari mahasiswa berdasarkan nama atau NIM..."
+        />
+      </div>
+
+      <section id="portfolioContainer" class="portfolio-grid"></section>
+      <div class="last-update" id="lastUpdate">Pembaruan terakhir: -</div>
+    </div>
+
+    <script>
+      const CSV_URL =
+        "https://docs.google.com/spreadsheets/d/e/2PACX-1vSYsQ7zDzMXVCamImCYcEkIVXhD15NuWc1QMpJUc919xT28ZupaPYlAxsXZpbX1f5OEzh6EM48v4SYc/pub?output=csv";
+
+      document.addEventListener("DOMContentLoaded", () => {
+        fetchData();
+        setupDarkMode();
+      });
+
+      function createCard(data) {
+        const description = data.Deskripsi
+          ? `<div class="portfolio-description">${escapeHtml(data.Deskripsi)}</div>`
+          : "";
+
+        return `
+          <div class="portfolio-card">
+            <div class="portfolio-content">
+              <h3 class="portfolio-title">
+                <span class="user-icon">
+                  <svg viewBox="0 0 24 24">
+                    <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 4c1.93 0 3.5 1.57 3.5 3.5S13.93 13 12 13s-3.5-1.57-3.5-3.5S10.07 6 12 6zm0 14c-2.03 0-4.43-.82-6.14-2.88C7.55 15.8 9.68 15 12 15s4.45.8 6.14 2.12C16.43 19.18 14.03 20 12 20z"/>
+                  </svg>
+                </span>
+                ${escapeHtml(data.Nama)}
+              </h3>
+              <div class="portfolio-details">
+                <p><strong>NIM:</strong> ${escapeHtml(data.Nim)}</p>
+                ${description}
+              </div>
+              <a href="${data.Link.startsWith('http') ? escapeHtml(data.Link) : 'http://' + escapeHtml(data.Link)}" 
+                 class="portfolio-link" 
+                 target="_blank">
+                Lihat Portofolio
+              </a>
+            </div>
+          </div>
+        `;
+      }
+
+      // Fungsi-fungsi lainnya tetap sama
+      function setupDarkMode() {
+        const darkModeToggle = document.getElementById("darkModeToggle");
+        
+        if (localStorage.getItem("darkMode") === "true") {
+          document.body.classList.add("dark-mode");
+        }
+
+        darkModeToggle.addEventListener("click", () => {
+          document.body.classList.toggle("dark-mode");
+          localStorage.setItem("darkMode", document.body.classList.contains("dark-mode"));
+        });
+      }
+
+      function fetchData() {
+        Papa.parse(CSV_URL, {
+          download: true,
+          header: true,
+          complete: function (results) {
+            const data = results.data;
+            displayPortfolio(data);
+            updateStats(data);
+            document.getElementById("lastUpdate").textContent =
+              "Pembaruan terakhir: " + new Date().toLocaleString();
+          },
+          error: function () {
+            document.getElementById("portfolioContainer").innerHTML =
+              '<div class="error">Gagal memuat data. Silakan coba lagi nanti.</div>';
+          },
+        });
+      }
+
+      function displayPortfolio(data) {
+        const portfolioContainer = document.getElementById("portfolioContainer");
+        portfolioContainer.innerHTML = "";
+
+        if (data.length === 0) {
+          portfolioContainer.innerHTML =
+            '<div class="empty-state">Tidak ada data yang tersedia.</div>';
+          return;
+        }
+
+        data.forEach((student) => {
+          if (student.Nama && student.Nim && student.Link) {
+            const cardHTML = createCard(student);
+            portfolioContainer.innerHTML += cardHTML;
+          }
+        });
+      }
+
+      function escapeHtml(text) {
+        const map = {
+          "&": "&amp;",
+          "<": "&lt;",
+          ">": "&gt;",
+          '"': "&quot;",
+          "'": "&#039;",
+        };
+        return text.replace(/[&<>"']/g, function (m) {
+          return map[m];
+        });
+      }
+
+      function updateStats(data) {
+        const totalSubmissions = data.filter(
+          (student) => student.Nama && student.Nim && student.Link
+        ).length;
+        document.getElementById("totalSubmissions").textContent = totalSubmissions;
+
+        const totalStudents = 33;
+        const completionRate = Math.round((totalSubmissions / totalStudents) * 100);
+        document.getElementById("completionRate").textContent = `${completionRate}%`;
+      }
+
+      document.getElementById("searchInput").addEventListener("input", function () {
+        const query = this.value.toLowerCase();
+        const portfolioCards = document.querySelectorAll(".portfolio-card");
+
+        portfolioCards.forEach((card) => {
+          const title = card.querySelector(".portfolio-title").textContent.toLowerCase();
+          const nim = card.querySelector(".portfolio-details p").textContent.toLowerCase();
+          if (title.includes(query) || nim.includes(query)) {
+            card.style.display = "block";
+          } else {
+            card.style.display = "none";
+          }
+        });
+      });
+    </script>
+  </body>
+</html>
