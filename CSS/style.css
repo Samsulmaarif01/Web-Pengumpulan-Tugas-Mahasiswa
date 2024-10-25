@@ -188,14 +188,14 @@ body.dark-mode {
     font-weight: 600;
     color: var(--text-color);
     margin-bottom: 0.5rem;
-    display: flex; /* Use flexbox for alignment */
-    align-items: center; /* Center items vertically */
+    display: flex; 
+    align-items: center; 
 }
 
 .user-icon {
-    margin-right: 0.5rem; /* Space between the icon and the text */
-    display: flex; /* Ensures the icon behaves as a flex item */
-    align-items: center; /* Center the icon vertically */
+    margin-right: 0.5rem; 
+    display: flex; 
+    align-items: center; 
 }
 
 .portfolio-details {
